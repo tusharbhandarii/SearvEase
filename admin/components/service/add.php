@@ -7,7 +7,7 @@ include '../../includes/db_connection.php';
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Add Services</title>
+  <title>Add Service - ServeEase Admin</title>
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
