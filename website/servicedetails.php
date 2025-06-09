@@ -17,9 +17,9 @@ include 'includes/config.php'; // Include the configuration file
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="images/s_logo.jpg" type="image/x-icon">
 
-  <title>Guarder</title>
+  <title>Service Details - ServeEase</title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
