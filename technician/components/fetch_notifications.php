@@ -1,8 +1,14 @@
 <?php
 // filepath: c:\xampp\htdocs\project\technician\components\fetch_notifications.php
 session_start();
+if (empty($_SESSION['technician_id'])) {
+    echo "<script> alert('Please login!');
+    window.location.href ='../../website/TechnicianLogin.php'; 
+    </script>";
+    exit;
+}
+include '../includes/db_connection.php';
 $technician_id = $_SESSION['technician_id'];
-$con = mysqli_connect("localhost", "root", "", "majorproject");
 
 // Join bookings, services, and users for full info
 $sql = "SELECT 

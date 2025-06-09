@@ -9,8 +9,21 @@ if (empty($_SESSION['un'])) {
 // Database connection
 include 'includes/db_connection.php';
 
-// Get user-specific orders
 $user = $_SESSION['un'];
+
+// Handle review submission
+if (isset($_POST['submit_review'])) {
+    $booking_id = intval($_POST['review_booking_id']);
+    $rating = intval($_POST['rating']);
+    $comment = mysqli_real_escape_string($con, $_POST['comment']);
+    // Prevent duplicate reviews
+    $exists = mysqli_query($con, "SELECT * FROM reviews WHERE booking_id=$booking_id AND customer_email='$user'");
+    if (mysqli_num_rows($exists) == 0) {
+        mysqli_query($con, "INSERT INTO reviews (booking_id, customer_email, rating, comment) VALUES ($booking_id, '$user', $rating, '$comment')");
+    }
+}
+
+// Get user-specific orders
 $query = "
     SELECT 
         bookings.id AS order_id,
@@ -24,6 +37,7 @@ $query = "
         services ON bookings.service_id = services.id
     WHERE 
         bookings.customer_email = '$user'
+    ORDER BY bookings.booking_datetime DESC
 ";
 $result = mysqli_query($con, $query);
 ?>
@@ -134,18 +148,46 @@ $result = mysqli_query($con, $query);
                         <th>Order Date</th>
                         <th>Amount</th>
                         <th>Status</th>
+                        <th>Review</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                         <tr>
                             <td><?php echo $row['order_id']; ?></td>
-
-                            <td><?php echo $row['service_name']; ?></td>
+                            <td><?php echo htmlspecialchars($row['service_name']); ?></td>
                             <td><?php echo $row['booking_datetime']; ?></td>
-
                             <td>Rs <?php echo $row['service_price']; ?></td>
                             <td><?php echo ucfirst($row['status']); ?></td>
+                            <td>
+                                <?php
+                                if ($row['status'] == 'Complete') {
+                                    $order_id = $row['order_id'];
+                                    $review_q = mysqli_query($con, "SELECT * FROM reviews WHERE booking_id=$order_id AND customer_email='$user'");
+                                    if (mysqli_num_rows($review_q) == 0) {
+                                ?>
+                                    <form method="post" action="">
+                                        <input type="hidden" name="review_booking_id" value="<?php echo $order_id; ?>">
+                                        <label>
+                                            <select name="rating" required class="form-control form-control-sm d-inline-block" style="width:auto;">
+                                                <option value="">Rate</option>
+                                                <?php for ($i=1; $i<=5; $i++) echo "<option value='$i'>$i ★</option>"; ?>
+                                            </select>
+                                        </label>
+                                        <input type="text" name="comment" placeholder="Write a review..." class="form-control form-control-sm d-inline-block" style="width:150px;">
+                                        <button type="submit" name="submit_review" class="btn btn-sm btn-primary">Submit</button>
+                                    </form>
+                                <?php
+                                    } else {
+                                        $review = mysqli_fetch_assoc($review_q);
+                                        echo "<b>Your Review:</b> ";
+                                        echo str_repeat("★", $review['rating']) . " - " . htmlspecialchars($review['comment']);
+                                    }
+                                } else {
+                                    echo "<span class='text-muted'>Available after completion</span>";
+                                }
+                                ?>
+                            </td>
                         </tr>
                     <?php } ?>
                 </tbody>

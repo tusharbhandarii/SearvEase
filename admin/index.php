@@ -82,12 +82,12 @@
             <div class="small-box bg-info">
               <div class="inner">
                  <h3>
-                    <?php
-                          $querybok="select id from bookings";
+                     <?php
+                          $querybok="select id from bookings where status='pending'";
                             $resexist=mysqli_query($con,$querybok);
                             $rowcount=mysqli_num_rows($resexist);
                             echo $rowcount;              
-                    ?>
+                  ?>
                 </h3>
 
                 <p>New Orders</p>
@@ -179,12 +179,13 @@
               <div class="info-box-content">
                 <span class="info-box-text">Pending Orders</span>
                 <span class="info-box-number">
+                 
                   <?php
-                          $querybok="select id from bookings where status='pending'";
+                          $querybok="select id from bookings";
                             $resexist=mysqli_query($con,$querybok);
                             $rowcount=mysqli_num_rows($resexist);
                             echo $rowcount;              
-                  ?>
+                    ?>
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -198,7 +199,7 @@
                 <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
                 <div class="info-box-content">
-                  <span class="info-box-text">Sales</span>
+                  <span class="info-box-text">Sales Money</span>
                   <span class="info-box-number">
                     <?php
                     $totalSales = 0;
@@ -234,8 +235,14 @@
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Likes</span>
-                <span class="info-box-number">41,410</span>
+                <span class="info-box-text">Average Rating</span>
+                <span class="info-box-number">
+                  <?php
+                    $avg_q = mysqli_query($con, "SELECT AVG(rating) AS avg_rating FROM reviews");
+                    $avg_row = mysqli_fetch_assoc($avg_q);
+                    echo $avg_row['avg_rating'] ? number_format($avg_row['avg_rating'], 1) . " / 5" : "No reviews";
+                  ?>
+                </span>
               </div>
               <!-- /.info-box-content -->
             </div>
