@@ -60,12 +60,17 @@ function fetchNotifications() {
       } else {
         document.getElementById('notifications-empty').style.display = 'none';
         data.forEach(req => {
-          html += `<div style="border-bottom:1px solid #eee; padding:16px 0; display:flex; align-items:center; justify-content:space-between;">
-            <span>New service request for booking #${req.booking_id}</span>
-            <span>
+          html += `<div style="border-bottom:1px solid #eee; padding:16px 0; display:flex; flex-direction:column;">
+            <div><strong>Service:</strong> ${req.service_name} (${req.service_category})</div>
+            <div><strong>Description:</strong> ${req.service_description}</div>
+            <div><strong>Price:</strong> ₹${req.service_price}</div>
+            <div><strong>Booking Date & Time:</strong> ${req.booking_datetime}</div>
+            <div><strong>User:</strong> ${req.user_name} (${req.user_email}, ${req.user_phone})</div>
+            <div><strong>Address:</strong> ${req.user_address}, ${req.user_city}, ${req.user_state} - ${req.user_zipcode}</div>
+            <div style="margin-top:8px;">
               <button style="margin-right:8px;" class="btn btn-success btn-sm" onclick="respond(${req.id}, 'accepted')">Accept</button>
               <button class="btn btn-danger btn-sm" onclick="respond(${req.id}, 'rejected')">Reject</button>
-            </span>
+            </div>
           </div>`;
         });
       }

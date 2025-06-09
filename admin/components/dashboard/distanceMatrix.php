@@ -143,7 +143,7 @@
                           <td><?php echo $row['distance_km']; ?> km</td>
                           <td>
                             <center>
-                              <form method="POST" action="send_request.php" style="display:inline;">
+                              <form method="POST" action="send_request.php" class="send-request-form" data-techname="<?php echo htmlspecialchars($row['name']); ?>" style="display:inline;">
                                 <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
                                 <input type="hidden" name="technician_id" value="<?php echo $row['id']; ?>">
                                 <button type="submit" class="btn btn-primary">Post</button>
@@ -194,6 +194,14 @@
     $('#example1').DataTable({
       responsive: true,
       autoWidth: false,
+    });
+
+    // Intercept form submission for send-request-form
+    $('.send-request-form').on('submit', function(e) {
+      e.preventDefault();
+      var techName = $(this).data('techname');
+      alert('Request sent to technician: ' + techName);
+      this.submit(); // Now submit the form
     });
   });
 </script>
