@@ -50,8 +50,7 @@ include 'includes/config.php'; // Include the configuration file
   <!-- about section -->
   <?php
 
-        $q = $_GET['q'];
-        // $selectquery = "SELECT * FROM services WHERE id = '$q'";
+        $q = isset($_GET['q']) ? intval($_GET['q']) : 0;
         $selectquery = "
             SELECT 
           services.*, 
