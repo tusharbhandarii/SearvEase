@@ -1,4 +1,7 @@
-<?php include ('includes/db_connection.php')?>
+<?php
+session_start();
+include('includes/db_connection.php');
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,32 +21,14 @@
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-  <style>
-    html, body {
-      width: 100%;
-      min-width: 100vw;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    .container-fluid, .content-wrapper {
-      width: 100% !important;
-      max-width: 100vw !important;
-      padding: 0;
-      margin: 0;
-    }
-    .row {
-      margin: 0;
-    }
-  </style>
 </head>
 <body>
-<div class="content-wrapper" style="min-height:100vh;">
+<div>
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Dashboard</h1>
+          <h1 class="m-0">Technician Dashboard</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -61,79 +46,82 @@
       <div class="row">
         <div class="col-lg-3 col-6">
           <div class="small-box bg-info">
-            <div class="inner">
-              <h3>
-                <?php
-                  $querybok="select id from bookings";
-                  $resexist=mysqli_query($con,$querybok);
-                  $rowcount=mysqli_num_rows($resexist);
-                  echo $rowcount;              
-                ?>
-              </h3>
-              <p>New Orders</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        <div class="inner">
+          <h3>
+            <?php echo isset($_SESSION['technician_email']) ? htmlspecialchars($_SESSION['technician_email']) : 'Technician'; ?>
+          </h3>
+          <p>Profile</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-person"></i>
+        </div>
+        <a href="./components/edit_profile.php" class="small-box-footer">Edit Profile <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
+
         <div class="col-lg-3 col-6">
           <div class="small-box bg-success">
             <div class="inner">
               <h3>
                 <?php
-                  $totalSales = 0;
-                  $querySales = "
-                    SELECT SUM(services.price) AS total 
-                    FROM services 
-                    INNER JOIN bookings ON services.id = bookings.service_id
-                  ";
-                  $resultSales = mysqli_query($con, $querySales);
-                  if ($rowSales = mysqli_fetch_assoc($resultSales)) {
-                      $totalSales = $rowSales['total'];
+                  // Fetch technician availability from DB
+                  $technician_id = $_SESSION['technician_id'];
+                  $availability = 'unavailable';
+                  $sql = "SELECT availability FROM technicians WHERE id = $technician_id";
+                  $result = mysqli_query($con, $sql);
+                  if ($row = mysqli_fetch_assoc($result)) {
+                      $availability = $row['availability'];
                   }
-                  echo $totalSales;
+                  $is_available = ($availability === 'available');
+                  echo $is_available ? 'Available' : 'Unavailable';
                 ?>
-                <sup style="font-size: 20px">Rs</sup>
               </h3>
-              <p>Total Sales</p>
+              <p>Availability Status</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <form method="post" style="margin:0;">
+              <input type="hidden" name="toggle_availability" value="1">
+              <button type="submit" class="small-box-footer btn btn-link" style="color:#fff;text-decoration:underline;">
+                <?php echo $is_available ? 'Set Unavailable' : 'Set Available'; ?> <i class="fas fa-arrow-circle-right"></i>
+              </button>
+            </form>
+            <?php
+              if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_availability'])) {
+                // Toggle availability in DB
+                $new_status = $is_available ? 'unavailable' : 'available';
+                $update_sql = "UPDATE technicians SET availability='$new_status' WHERE id=$technician_id";
+                mysqli_query($con, $update_sql);
+                // Optionally update session
+                $_SESSION['technician_available'] = ($new_status === 'available');
+                // Refresh to show updated status
+                echo "<meta http-equiv='refresh' content='0'>";
+              }
+            ?>
           </div>
         </div>
+
         <div class="col-lg-3 col-6">
           <div class="small-box bg-warning">
             <div class="inner">
               <h3>
-                <?php
-                  $querycusss = "SELECT COUNT(*) AS total FROM users WHERE role='customer'";
-                  $resexist = mysqli_query($con, $querycusss);
-                  $row = mysqli_fetch_assoc($resexist);
-                  echo $row['total'];
-                ?>
+               gugiuyoiyoiy
               </h3>
-              <p>User Registrations</p>
+              <p>Notifications</p>
             </div>
             <div class="icon">
-              <i class="ion ion-person-add"></i>
+              <i class="ion ion-ios-bell"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="./components/notifications.php" class="small-box-footer">View Notifications <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
+
         <div class="col-lg-3 col-6">
           <div class="small-box bg-danger">
             <div class="inner">
               <h3>
-                <?php
-                  $querycusss = "SELECT COUNT(*) AS total FROM technicians WHERE availability='available'";
-                  $resexist = mysqli_query($con, $querycusss);
-                  $row = mysqli_fetch_assoc($resexist);
-                  echo $row['total'];
-                ?>
+                  dksjdiojsaojdo
               </h3>
               <p>Available Technician </p>
             </div>

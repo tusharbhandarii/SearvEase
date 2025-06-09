@@ -141,7 +141,15 @@
                           <td><?php echo $row['email']; ?></td>
                           <td><?php echo $row['name']; ?></td>
                           <td><?php echo $row['distance_km']; ?> km</td>
-                          <td><center><a class="btn btn-primary" href="#?q=<?php echo $row['id'];?>">Post</a></center></td>
+                          <td>
+                            <center>
+                              <form method="POST" action="send_request.php" style="display:inline;">
+                                <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
+                                <input type="hidden" name="technician_id" value="<?php echo $row['id']; ?>">
+                                <button type="submit" class="btn btn-primary">Post</button>
+                              </form>
+                            </center>
+                          </td>
 
                       </tr>
                   <?php

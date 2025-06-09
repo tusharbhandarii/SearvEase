@@ -114,7 +114,7 @@
       $email = $_POST['email'];
       $password = $_POST['password'];
 
-      $logincheck = "SELECT * FROM users WHERE email='$email' AND role='technician' ";
+      $logincheck = "SELECT * FROM admin WHERE email='$email' ";
       $rescheck = mysqli_query($con, $logincheck);
 
       if ($rescheck && mysqli_num_rows($rescheck) > 0) {
@@ -123,18 +123,18 @@
               $_SESSION['un'] = $email;
               echo "<script>
                   alert('Successful login');
-                  window.location.href='../technician/index.php';
+                  window.location.href='../admin/index.php';
               </script>";
           } else {
               echo "<script>
                   alert('Incorrect password');
-                  window.location.href='TechnicianLogin.php';
+                  window.location.href='AdminLogin.php';
               </script>";
           }
       } else {
           echo "<script>
               alert('Email not found');
-              window.location.href='TechnicianLogin.php';
+              window.location.href='AdminLogin.php';
           </script>";
       }
   }

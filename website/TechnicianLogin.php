@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 
@@ -115,27 +118,28 @@
       $email = $_POST['email'];
       $password = $_POST['password'];
 
-      $logincheck = "SELECT * FROM admin WHERE email='$email'";
+      $logincheck = "SELECT * FROM users WHERE email='$email' AND role='technician' ";
       $rescheck = mysqli_query($con, $logincheck);
 
       if ($rescheck && mysqli_num_rows($rescheck) > 0) {
           $row = mysqli_fetch_assoc($rescheck);
           if ($row['password'] === $password) { // Use password_verify() if passwords are hashed
-              $_SESSION['un'] = $email;
+              $_SESSION['technician_id'] = $row['id'];
+              $_SESSION['technician_email'] = $email;
               echo "<script>
                   alert('Successful login');
-                  window.location.href='../admin/index.php';
+                  window.location.href='../technician/index.php';
               </script>";
           } else {
               echo "<script>
                   alert('Incorrect password');
-                  window.location.href='AdminLogin.php';
+                  window.location.href='TechnicianLogin.php';
               </script>";
           }
       } else {
           echo "<script>
               alert('Email not found');
-              window.location.href='AdminLogin.php';
+              window.location.href='TechnicianLogin.php';
           </script>";
       }
   }
