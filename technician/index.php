@@ -105,8 +105,8 @@ include('includes/db_connection.php');
         <div class="col-lg-3 col-6">
           <div class="small-box bg-warning">
             <div class="inner">
-              <h3>
-               gugiuyoiyoiy
+              <h3 id="notificationCount">
+                0
               </h3>
               <p>Notifications</p>
             </div>
@@ -121,14 +121,17 @@ include('includes/db_connection.php');
           <div class="small-box bg-danger">
             <div class="inner">
               <h3>
-                  dksjdiojsaojdo
+                  <!-- You can show a count here if you want -->
+                  My Bookings
               </h3>
-              <p>Available Technician </p>
+              <p>Available Technician</p>
             </div>
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="components/view_requests.php" class="small-box-footer">
+              View My Bookings <i class="fas fa-arrow-circle-right"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -220,6 +223,17 @@ include('includes/db_connection.php');
 <script src="dist/js/demo.js"></script>
 <script src="dist/js/pages/dashboard.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+<script>
+function updateNotificationCount() {
+  fetch('components/fetch_notification_count.php')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('notificationCount').textContent = data.count;
+    });
+}
+updateNotificationCount();
+setInterval(updateNotificationCount, 5000); // Update every 5 seconds
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const todoList = document.getElementById('todoList');
