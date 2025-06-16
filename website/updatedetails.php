@@ -162,15 +162,14 @@ include 'includes/config.php'; // Include the configuration file
                             $city=$_POST['city'];
                             $pincode=$_POST['pincode'];
                             $address=$_POST['address'];
-                            $datetime=$_POST['datetime'];
 
                             
-                            $editquery = "UPDATE users SET name='$name', phone='$phno',city='$city',zipcode='$pincode',address='$address' WHERE email='$custemail'";
+                            $editQuery = "UPDATE users SET name='$name', phone='$phno',city='$city',zipcode='$pincode',address='$address' WHERE email='$custemail'";
 
                             if(mysqli_query($con, $editQuery))
                             {
                                 echo "<script>
-                                 alert('Booking Confirmed !! ');window.location.href='index.php';</script>";
+                                 alert('Profile Updated !! ');window.location.href='index.php';</script>";
                             }
                             else
                             {

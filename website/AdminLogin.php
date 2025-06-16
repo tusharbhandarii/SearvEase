@@ -120,7 +120,7 @@
       if ($rescheck && mysqli_num_rows($rescheck) > 0) {
           $row = mysqli_fetch_assoc($rescheck);
           if ($row['password'] === $password) { // Use password_verify() if passwords are hashed
-              $_SESSION['un'] = $email;
+              $_SESSION['admin_email'] = $email;
               echo "<script>
                   alert('Successful login');
                   window.location.href='../admin/index.php';

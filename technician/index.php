@@ -1,6 +1,10 @@
 <?php
 session_start();
 include('includes/db_connection.php');
+if (empty($_SESSION['technician_id'])) {
+    header("Location: ../website/TechnicianLogin.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>

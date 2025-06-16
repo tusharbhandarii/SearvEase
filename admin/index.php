@@ -1,4 +1,11 @@
-<?php include ('includes/db_connection.php')?>
+<?php
+session_start();
+include('includes/db_connection.php');
+if (empty($_SESSION['admin_email'])) {
+    header("Location: ../website/AdminLogin.php");
+    exit;
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
